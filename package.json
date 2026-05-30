@@ -1,0 +1,30 @@
+{
+  "name": "onboarding-linx",
+  "version": "1.0.0",
+  "description": "Sistema de Onboarding Linx com MariaDB",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.9.7",
+    "nodemailer": "^6.9.13"
+  },
+  "devDependencies": {
+    "electron": "^30.0.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.linx.onboarding",
+    "productName": "OnboardingLinx",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.ico"
+    }
+  }
+}

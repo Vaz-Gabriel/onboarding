@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ONBOARDING</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- TELA DE LOGIN -->
+<div id="loginScreen" class="screen" style="display: flex;">
+  <div class="login-bg"><div class="login-grid"></div></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="../assets/icon.png" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 15px;">
+      <span class="logo-text" style="font-size: 24px; font-weight: 900; overflow: visible; white-space: nowrap;">ONBOARDING</span>
+    </div>
+    <h1 class="login-title">Acesso ao Sistema</h1>
+    <p class="login-sub">Insira seu e-mail e senha para continuar</p>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="loginEmail" placeholder="seu.email@linx.com.br" autocomplete="off" />
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <div id="loginError" class="error-msg hidden"></div>
+    <button class="btn-primary" onclick="doLogin()">Entrar</button>
+    <div style="margin-top:20px; text-align:center; border-top:1px solid var(--border); padding-top:15px">
+      <p style="font-size:12px; color:var(--text-muted); margin-top:10px">Primeiro acesso?</p>
+      <button class="btn-secondary" style="width:100%; margin-top:5px" onclick="switchAuthScreen('primeiro-acesso')">Ativar Conta</button>
+    </div>
+  </div>
+</div>
+
+<!-- TELA DE PRIMEIRO ACESSO -->
+<div id="primeiroAcessoScreen" class="screen" style="display: none;">
+  <div class="login-bg"><div class="login-grid"></div></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="../assets/icon.png" style="width: 48px; height: 48px; border-radius: 8px; margin-bottom: 15px;">
+      <span class="logo-text" style="font-size: 24px; font-weight: 900; overflow: visible; white-space: nowrap;">ONBOARDING</span>
+    </div>
+    <h1 class="login-title">Ativar Conta</h1>
+    <p class="login-sub">Confirme seu e-mail para ativar a conta</p>
+    <div id="primeiroAcessoStep1" style="display:block">
+      <div class="form-group">
+        <label>E-mail Cadastrado</label>
+        <input type="email" id="primeiroAcessoEmail" placeholder="seu.email@linx.com.br" />
+      </div>
+      <div id="primeiroAcessoError1" class="error-msg hidden"></div>
+      <button class="btn-primary" onclick="verificarEmailPrimeiroAcesso()">Verificar E-mail</button>
+    </div>
+    <div id="primeiroAcessoStep2" style="display:none">
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="primeiroAcessoSenha" placeholder="Mínimo 8 caracteres" />
+      </div>
+      <div class="form-group">
+        <label>Confirmar Senha</label>
+        <input type="password" id="primeiroAcessoConfirmaSenha" placeholder="Confirme a senha" />
+      </div>
+      <div id="primeiroAcessoError2" class="error-msg hidden"></div>
+      <button class="btn-primary" onclick="definirSenhaPrimeiroAcesso()">Definir Senha</button>
+    </div>
+    <div style="margin-top:15px; text-align:center">
+      <button class="btn-secondary" style="width:100%" onclick="switchAuthScreen('login')">Voltar ao Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- TELA PRINCIPAL DO APLICATIVO -->
+<div id="appScreen" class="screen" style="display: none;">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-content" style="width: 100%; display: flex; align-items: center; gap: 8px; overflow: visible;">
+        <img src="../assets/icon.png" style="width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0;">
+        <span class="logo-text" style="white-space: nowrap; overflow: visible; text-overflow: clip; font-size: 14px; width: auto;">ONBOARDING</span>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button id="themeToggle" onclick="toggleTheme()" title="Mudar Tema" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px;">🌓</button>
+        <button id="toggleSidebar" onclick="toggleSidebar()" title="Menu" style="flex-shrink: 0;">☰</button>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-view="dashboard" onclick="event.preventDefault(); switchView('dashboard')">
+        <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-view="analysts" onclick="event.preventDefault(); switchView('analysts')">
+        <span class="nav-icon">👥</span><span class="nav-label">Analistas</span>
+      </a>
+      <a href="#" class="nav-item" data-view="trilha" onclick="event.preventDefault(); switchView('trilha')">
+        <span class="nav-icon">🎓</span><span class="nav-label">Trilha RC</span>
+      </a>
+      <a href="#" class="nav-item" data-view="trainings" onclick="event.preventDefault(); switchView('trainings')">
+        <span class="nav-icon">📚</span><span class="nav-label">Treinamentos</span>
+      </a>
+      <a href="#" class="nav-item" data-view="feedback" onclick="event.preventDefault(); switchView('feedback')">
+        <span class="nav-icon">💬</span><span class="nav-label">Feedback</span>
+      </a>
+      <a href="#" class="nav-item" data-view="agenda" onclick="event.preventDefault(); switchView('agenda')">
+        <span class="nav-icon">📅</span><span class="nav-label">Agenda</span>
+      </a>
+      <a href="#" class="nav-item" data-view="users" onclick="event.preventDefault(); switchView('users')">
+        <span class="nav-icon">🔑</span><span class="nav-label">Usuários</span>
+      </a>
+      <a href="#" class="nav-item" data-view="grupos" onclick="event.preventDefault(); switchView('grupos')">
+        <span class="nav-icon">🏢</span><span class="nav-label">Grupos</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">👤</div>
+        <div>
+          <p id="sidebarUserName" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Usuário</p>
+          <p id="sidebarUserRole" style="font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ROLE</p>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sair</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <!-- DASHBOARD -->
+    <div id="view-dashboard" class="view active">
+      <div class="page-header"><h2>Dashboard</h2><p>Visão geral do onboarding</p></div>
+      <div id="dashStats" class="stats-grid"></div>
+      <div class="card" style="margin-top: 30px;">
+        <h3>Analistas em Onboarding</h3>
+        <div id="dashTable" class="table-wrap"></div>
+      </div>
+    </div>
+
+    <!-- ANALISTAS -->
+    <div id="view-analysts" class="view">
+      <div class="page-header">
+        <div>
+          <h2>Analistas</h2>
+          <p>Gestão de analistas em onboarding</p>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <input type="text" id="analystSearch" placeholder="Buscar analista..." style="flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius);" onkeyup="renderAnalysts()" />
+        </div>
+        <div id="analystsList" class="table-wrap"></div>
+      </div>
+    </div>
+
+    <!-- TRILHA RC -->
+    <div id="view-trilha" class="view">
+      <div class="page-header">
+        <h2>Trilha RC</h2>
+        <p>Cursos e treinamentos obrigatórios</p>
+      </div>
+      <div class="card" style="margin-bottom: 20px;">
+        <button class="btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="openAddTrilhaModal()">+ NOVO CURSO</button>
+        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+          <label class="btn-secondary" style="cursor: pointer; margin: 0; display: flex; align-items: center; gap: 8px;">
+            📥 Importar Excel
+            <input type="file" id="trilhaFileInput" accept=".xlsx" style="display: none;" onchange="handleFileImport(event, 'trilha')" />
+          </label>
+          <div style="flex: 1;"></div>
+          <select id="trilhaAnalystFilter" class="filter-select" onchange="renderTrilha()" style="min-width: 200px;"></select>
+        </div>
+      </div>
+      <div id="trilhaProgressWrap" class="card" style="display: none; margin-bottom: 20px;">
+        <p style="margin-bottom: 10px;">Progresso: <span id="trilhaProgressLabel">0%</span></p>
+        <div class="progress-bar">
+          <div id="trilhaProgressFill" class="progress-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+      <div id="trilhaTable" class="table-wrap card"></div>
+    </div>
+
+    <!-- TREINAMENTOS -->
+    <div id="view-trainings" class="view">
+      <div class="page-header">
+        <div>
+          <h2>Treinamentos</h2>
+          <p>Materiais de treinamento (PDF e PPTX)</p>
+        </div>
+        <button class="btn-primary" onclick="openAddTraining()">+ Novo Treinamento</button>
+      </div>
+      <div id="trainingsTable" class="table-wrap card"></div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div id="view-feedback" class="view">
+      <div class="page-header"><h2>Feedback</h2><p>Gestão de feedbacks</p></div>
+      <div id="feedbackFormSection" class="card feedback-card-form" style="margin-bottom: 20px;">
+        <h3 id="feedbackModalTitle">Novo Feedback</h3>
+        <div class="form-group">
+          <label>Destinatário</label>
+          <select id="f_feedback_destinatario" class="filter-select" style="width: 100%;"></select>
+        </div>
+        <div class="form-group">
+          <label>Mensagem</label>
+          <textarea id="f_feedback_text" placeholder="Escreva seu feedback..." style="min-height: 100px; width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg3); color: var(--text);"></textarea>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-primary" onclick="saveFeedback()">Enviar Feedback</button>
+          <button id="btnCancelFeedback" class="btn-secondary" style="display: none;" onclick="cancelEditFeedback()">Cancelar</button>
+        </div>
+      </div>
+      <div id="feedbackList" class="feedback-container"></div>
+    </div>
+
+    <!-- AGENDA -->
+    <div id="view-agenda" class="view">
+      <div class="page-header">
+        <div>
+          <h2>Agenda</h2>
+          <p>Gestão de agendamentos, treinamentos e reuniões</p>
+        </div>
+        <button class="btn-primary" onclick="openAddAgenda()">+ Novo Agendamento</button>
+      </div>
+      <div id="agendaStats" class="stats-grid" style="margin-bottom: 20px;"></div>
+      <div id="agendaTable" class="table-wrap card"></div>
+    </div>
+
+    <!-- USUÁRIOS -->
+    <div id="view-users" class="view">
+      <div class="page-header">
+        <div>
+          <h2>Usuários</h2>
+          <p>Gestão de usuários do sistema</p>
+        </div>
+        <button class="btn-primary" onclick="openAddUser()">+ Novo Usuário</button>
+      </div>
+      <div id="usersTable" class="table-wrap card"></div>
+    </div>
+
+    <!-- GRUPOS -->
+    <div id="view-grupos" class="view">
+      <div class="page-header">
+        <div>
+          <h2>Grupos</h2>
+          <p>Gestão de grupos e permissões</p>
+        </div>
+        <button class="btn-primary" onclick="openAddGrupo()">+ Novo Grupo</button>
+      </div>
+      <div id="gruposTable" class="table-wrap card"></div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAIS -->
+<div id="modalAnalyst" class="modal hidden">
+  <div class="modal-content" style="width: 90%; max-width: 600px;">
+    <div class="modal-header">
+      <h3 id="modalAnalystTitle">Novo Analista</h3>
+      <button class="modal-close" onclick="closeAnalystModal()">✕</button>
+    </div>
+    <div id="modalAnalystBody" class="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeAnalystModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveAnalyst()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalTrilha" class="modal hidden">
+  <div class="modal-content" style="width: 90%; max-width: 600px;">
+    <div class="modal-header">
+      <h3>Novo Curso</h3>
+      <button class="modal-close" onclick="closeTrilhaModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Tema</label><input type="text" id="f_trilha_tema" placeholder="Nome do curso" /></div>
+      <div class="form-group"><label>Duração</label><input type="text" id="f_trilha_duracao" placeholder="Ex: 2h 30m" /></div>
+      <div class="form-group"><label>Frente</label><select id="f_trilha_frente"><option>Reta</option><option>PDV</option><option>Reta e PDV</option></select></div>
+      <div class="form-group"><label>Bloco</label><input type="number" id="f_trilha_bloco" placeholder="1" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeTrilhaModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveTrilha()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalTraining" class="modal hidden">
+  <div class="modal-content" style="width: 90%; max-width: 600px;">
+    <div class="modal-header">
+      <h3 id="modalTrainingTitle">Novo Treinamento</h3>
+      <button class="modal-close" onclick="closeTrainingModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Nome</label><input type="text" id="f_train_nome" placeholder="Nome do treinamento" /></div>
+      <div class="form-group"><label>Aplicador</label><input type="text" id="f_train_instrutor" placeholder="Nome do instrutor" /></div>
+      <div class="form-group"><label>Arquivo (PDF ou PPTX)</label><input type="file" id="f_train_file" accept=".pdf,.pptx" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeTrainingModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveTraining()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalAgenda" class="modal hidden">
+  <div class="modal-content" style="width: 90%; max-width: 700px;">
+    <div class="modal-header">
+      <h3 id="modalAgendaTitle">Novo Agendamento</h3>
+      <button class="modal-close" onclick="closeAgendaModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Título</label><input type="text" id="f_agenda_titulo" placeholder="Título do agendamento" /></div>
+      <div class="form-group"><label>Descrição</label><textarea id="f_agenda_desc" placeholder="Descrição..." style="min-height: 80px;"></textarea></div>
+      <div class="form-group"><label>Data e Hora</label><input type="datetime-local" id="f_agenda_data" /></div>
+      <div class="form-group"><label>Tipo</label><select id="f_agenda_tipo"><option>Reunião</option><option>Treinamento</option><option>Feedback</option></select></div>
+      <div class="form-group"><label>Status</label><select id="f_agenda_status"><option>Agendado</option><option>Concluído</option><option>Cancelado</option><option>Reagendado</option></select></div>
+      <div class="form-group"><label>Participantes (selecione abaixo)</label><div id="f_agenda_participantes_list" style="max-height: 150px; overflow-y: auto; border: 1px solid var(--border); padding: 10px; border-radius: var(--radius);"></div></div>
+      <div class="form-group"><label>Motivo (se aplicável)</label><input type="text" id="f_agenda_motivo" placeholder="Motivo de alteração" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeAgendaModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveAgenda()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalUser" class="modal hidden">
+  <div class="modal-content" style="width: 90%; max-width: 700px;">
+    <div class="modal-header">
+      <h3 id="modalUserTitle">Novo Usuário</h3>
+      <button class="modal-close" onclick="closeUserModal()">✕</button>
+    </div>
+    <div id="modalUserBody" class="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeUserModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveUser()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalGrupo" class="modal hidden">
+  <div class="modal-content" style="width: 90%; max-width: 600px;">
+    <div class="modal-header">
+      <h3 id="modalGrupoTitle">Novo Grupo</h3>
+      <button class="modal-close" onclick="closeGrupoModal()">✕</button>
+    </div>
+    <div id="modalGrupoBody" class="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeGrupoModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveGrupo()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE IMPORTAÇÃO -->
+<div id="modalImport" class="modal hidden">
+  <div class="modal-content" style="width: 90%; max-width: 800px;">
+    <div class="modal-header">
+      <h3>Prévia de Importação</h3>
+      <button class="modal-close" onclick="closeImportModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 15px; color: var(--text-muted);">Verifique os dados abaixo antes de confirmar a importação:</p>
+      <div id="importPreview" style="max-height: 400px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px;"></div>
+      <input type="hidden" id="importData" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeImportModal()">Cancelar</button>
+      <button class="btn-primary" onclick="confirmImportTrilhas()">Confirmar Importação</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+<div id="modalDeleteConfirm" class="modal hidden">
+  <div class="modal-content" style="width: 90%; max-width: 400px;">
+    <div class="modal-header">
+      <h3>Confirmar Exclusão</h3>
+      <button class="modal-close" onclick="closeDeleteConfirm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeDeleteConfirm()">Cancelar</button>
+      <button class="btn-danger" onclick="confirmDelete()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICAÇÕES (TOAST) -->
+<div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
